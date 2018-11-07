@@ -139,9 +139,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             'SOAPAction' => $endpoint.'/'.$this->getMethod(),
         );
 
-        $httpResponse = $this->httpClient->post($endpoint, $headers, $data)->send();
+        $httpResponse = $this->httpClient->request('POST', $endpoint, $headers, http_build_query($data));
+        $result = simplexml_load_string($httpResponse->getBody()->getContents());
 
-        return $this->createResponse($httpResponse->xml());
+        return $this->createResponse($result);
     }
 
     /**
